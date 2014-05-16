@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<catalog>
+   <book id="bk101">
+      <author></author>
+      <title></title>
+      <genre></genre>
+      <price></price>
+      <publish_date></publish_date>
+      <description></description>
+      <image></image>
+   </book>
+   <book id="bk102">
+      
+   </book>
+   </catalog>

@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title> Book Tables </title>
+<script type="text/javascript">
+var xmlDoc="";
+//var xhttp;
+function loadXML()
+{ var URL=document.getElementById("source").value;
+if(URL=="")
+	 {alert("ERROR,no file is typed in!"); return;}
+if (window.XMLHttpRequest)
+  {//Code for IE7+,Firefox, Chrome,Opera,Safari
+  xhttp=new XMLHttpRequest();
+  }
+else
+  {//Code for IE6,IE5
+  xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+
+
+xhttp.open("GET",URL,false);
+xhttp.send();
+/*xhttp.onreadystatechange=function()
+  {
+ if (xhttp.readyState==4){ //if request has completed
+  if (xhttp.status==200 || window.location.href.indexOf("http")==-1)
+      { ;}
+    else alert("Not Found");
+    // FOUND!
+	}
+   //if(xhttp.status==404) alert("Not here");
+   }	
+  */
+  if(xhttp.responseXML==null)
+  {alert("not existing this XML file"); return;}
+xmlDoc=xhttp.responseXML;
+ if(xmlDoc.documentElement.nodeName=="parsererror")
+		   {alert("Error in XML file,invalid file"); return;}
+parse(xmlDoc);
+//document.write("Hello World!");
+return xmlDoc;
+}
+
+function parse(xmlDoc)
+{ var author="not given";
+  var title= "not given";
+  var genre= "not given";
+  var price= "not given";
+  var publishDate= "not given";
+  var description= "not given";
+  var image= "not given";
+//title,genre,price,publish_date,description,image;
+  var noOfItems=xmlDoc.documentElement.childNodes.length;
+  Book=xmlDoc.getElementsByTagName("book");
+  var noOfBook=Book.length;
+  //if(noOfBook==0)
+  //{alert("ERROR,No book is existing here!"); return;}
+ var bodyNew="<table border='1' width='100%';>"+"<tr>"+"<th>"+"author"+"</th>"+"<th>"+"title"+"</th>"+"<th>"+"genre"+"</th>"+"<th>"+"price"+"</th>"+"<th>"+"publish_date"+"</th>"+"<th>"+"desciption"+"</th>"+"<th>"+"image"+"</th>"+"</tr>";
+
+ //document.write("the book number"+noOfBook);
+ //document.write("the first book lists"+  Book[0].childNodes.length);
+  var count=0;
+  for(var i=0;i<noOfBook;i++) 
+  {  count=0;
+     for(var j=0;j<Book[i].childNodes.length;j++)
+    {if(Book[i].childNodes[j].nodeType==1)
+	    { count++;
+		  
+		  if(Book[i].childNodes[j].nodeName=="author")  
+		   { if(Book[i].childNodes[j].firstChild!=null)
+		    author=Book[i].childNodes[j].childNodes[0].nodeValue;
+			else
+			author="not given";
+			}
+		   
+	  
+	     if(Book[i].childNodes[j].nodeName=="title")  
+		  { if(Book[i].childNodes[j].firstChild!=null)
+		   title=Book[i].childNodes[j].childNodes[0].nodeValue;
+		   else
+		   title="not given";
+		   }
+		   
+		  
+		  if(Book[i].childNodes[j].nodeName=="genre")  
+		  { if(Book[i].childNodes[j].firstChild!=null)
+		    genre=Book[i].childNodes[j].childNodes[0].nodeValue;
+		    else 
+			genre="not given";
+		  }
+		  if(Book[i].childNodes[j].nodeName=="price")  
+		   {if(Book[i].childNodes[j].firstChild!=null)
+		    price=Book[i].childNodes[j].childNodes[0].nodeValue;
+		    else 
+			price="not given";
+		   }
+	  
+		  
+		  if(Book[i].childNodes[j].nodeName=="publish_date")
+		   { if(Book[i].childNodes[j].firstChild!=null)
+		     publishDate=Book[i].childNodes[j].childNodes[0].nodeValue; 
+		     else 
+			 publish_date="not given";
+			} 
+
+		  if(Book[i].childNodes[j].nodeName=="description") 
+           {if(Book[i].childNodes[j].firstChild!=null)
+		    description=Book[i].childNodes[j].childNodes[0].nodeValue; 
+		    else 
+			nodeName="not given";
+			}
+		  
+		  if(Book[i].childNodes[j].nodeName=="image") 
+		   {if(Book[i].childNodes[j].firstChild!=null)
+		    image=Book[i].childNodes[j].childNodes[0].nodeValue;
+		     else 
+			 image="not given";
+			} 
+		  
+		  
+		}//end if
+	} //end for each book
+	
+	/*if(author=="") author="not given";
+	if(title=="") title="not given";
+	if(genre=="") genre="not given";
+	if(price=="") price="not given";
+	if(description=="") description="not given";
+	if(image=="") image="not given";*/
+	
+	if((count==0)||(image=="not given"&&author=="not given"&&title=="not given"&&genre=="not given"&&price=="not given"&&description=="not given"))
+	bodyNew=bodyNew;
+	else 
+   //this is for each book, write the info of one row
+     {bodyNew=bodyNew+"<tr>"+"<td>"+author+"</td>"+"<td>"+title+"</td>"+"<td>"+genre+"</td>"+"<td>"+price+"</td>"+"<td>"+ publishDate+"</td>"+"<td>"+description+"</td>"+"<td>"+"<img src='"+image+"' width='140' height='160'>"+"</td>"+"</tr>"; } 
+   
+   
+  author="not given";
+   title= "not given";
+   genre= "not given";
+   price= "not given";
+   publishDate= "not given";
+   description= "not given";
+   image= "not given";
+   
+    
+  }//end for all the book
+  var newPage="<html> <head> <title> Parsed Book Tables </title> </head> <body>"+ bodyNew+ "</table>"+"</bo"+"dy>"+ "</html>";
+  var page=window.open('', 'HW4', 'height=800, width=1000, toolbar=yes, menubar=yes, scrollbars=yes,resizable=yes').document;
+           page.write(newPage);
+            page.close();
+return;
+}
+
+ </script>
+</head>
+<body>
+<div style="margin-top:100px;text-align:center;font-family:New Times;font-size:30px">
+  <p>
+  Enter XML File</p>
+  
+  <form onSubmit="loadXML()">
+    <input type="text" id="source" style="font-size:20px;" /><br>
+	<button type="submit" value="Submit" >Submit Query</button>
+  </form>
+  </div>
+  <noscript> 
+</body>
+</html>
